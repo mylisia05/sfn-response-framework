@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SfN Rapid Response Framework</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      background: #f5f4f0;
+      color: #1a1a1a;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .page { max-width: 820px; margin: 0 auto; }
+
+    h1 { 
+      font-size: 32px; 
+      font-weight: 400; 
+      color: #104B7D; 
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+    .subtitle { 
+      font-size: 16px; 
+      color: #666; 
+      margin-bottom: 2rem;
+      font-weight: 400;
+    }
+
+    .nav-tabs { 
+      display: flex; 
+      gap: 6px; 
+      margin-bottom: 2rem; 
+      flex-wrap: wrap;
+      border-bottom: 2px solid #e5e0d8;
+      padding-bottom: 0.5rem;
+    }
+    .tab-btn {
+      padding: 10px 20px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      color: #555;
+      transition: all 0.2s ease;
+      margin-bottom: -0.5rem;
+      position: relative;
+      top: 0.5rem;
+    }
+    .tab-btn:hover { 
+      color: #104B7D;
+      border-bottom-color: #ccc;
+    }
+    .tab-btn.active { 
+      color: #ffffff; 
+      border-bottom-color: #104B7D;
+      font-weight: 600;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .section-intro {
+      font-size: 15px;
+      color: #444;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: #f0f5fb;
+      border-left: 4px solid #104B7D;
+      border-radius: 2px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 400;
+      color: #104B7D;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .card-title .tag {
+      display: inline-block;
+      font-size: 12px;
+      padding: 3px 12px;
+      border-radius: 20px;
+      margin-left: 12px;
+      vertical-align: middle;
+      font-weight: 500;
+    }
+    .tag-red    { background: #fce4e4; color: #8A1F03; }
+    .tag-amber  { background: #fef5e8; color: #8b5a00; }
+    .tag-blue   { background: #e8f2fc; color: #104B7D; }
+    .tag-green  { background: #e8f3e0; color: #2d5a1c; }
+    .tag-gray   { background: #f5f4f0; color: #8C8D8E; }
+
+    ul, ol { 
+      padding-left: 1.5em;
+      margin-bottom: 1rem;
+    }
+    li { 
+      margin-bottom: 8px; 
+      line-height: 1.65;
+      color: #333;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2.5rem;
+      margin-top: 1rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: #104B7D;
+      opacity: 0.3;
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -1.85rem;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #104B7D;
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 0 2px #104B7D;
+    }
+    .tl-time {
+      font-size: 13px;
+      color: #104B7D;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .tl-label {
+      font-size: 15px;
+      color: #2b2b2b;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .tl-detail {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 1rem;
+    }
+    .role-card {
+      background: #fafaf8;
+      border: 1px solid #e0ddd8;
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .role-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #104B7D;
+      margin-bottom: 8px;
+    }
+    .role-duties {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+      padding-left: 1em;
+    }
+    .role-duties li { margin-bottom: 6px; }
+
+    .escalation-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 1rem;
+    }
+    .escalation-table th {
+      background: #104B7D;
+      color: #ffffff;
+      border: 1px solid #104B7D;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .escalation-table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      color: #333;
+    }
+    .escalation-table tr:nth-child(even) {
+      background: #f9f8f6;
+    }
+
+    .decision-tree {
+      margin-top: 1rem;
+    }
+    .decision-box {
+      background: #f0f5fb;
+      border: 2px solid #104B7D;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .decision-box.yes {
+      border-color: #2d9e3f;
+      background: #eef5ea;
+    }
+    .decision-box.no {
+      border-color: #c41e1e;
+      background: #fbe9e9;
+    }
+
+    .statement-type {
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .statement-type-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #104B7D;
+      margin-bottom: 0.5rem;
+    }
+    .statement-type-desc {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+    .checklist-item input[type="checkbox"] {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      margin-top: 3px;
+      cursor: pointer;
+      accent-color: #104B7D;
+    }
+    .check-label {
+      font-size: 15px;
+      color: #333;
+      font-weight: 400;
+    }
+    .check-owner {
+      font-size: 12px;
+      color: #999;
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
+    .copy-btn {
+      background: #104B7D;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 1rem;
+    }
+    .copy-btn:hover {
+      background: #0c3860;
+    }
+    .copy-btn.copied {
+      background: #2d9e3f;
+    }
+
+    .template-box {
+      background: #f9f8f6;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #333;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    .approval-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 1rem;
+    }
+    .approval-table th {
+      background: #f5f4f0;
+      border: 1px solid #ddd;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+    }
+    .approval-table td {
+      border: 1px solid #ddd;
+      padding: 10px 12px;
+      color: #333;
+    }
+    .approval-table .tier-1 { background: #fce4e4; }
+    .approval-table .tier-2 { background: #fef5e8; }
+    .approval-table .tier-3 { background: #e8f2fc; }
+
+    .key-principles {
+      background: #f0f5fb;
+      border-left: 4px solid #104B7D;
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .key-principles ol {
+      padding-left: 1.5em;
+    }
+    .key-principles li {
+      margin-bottom: 0.75rem;
+    }
+
+    a {
+      color: #104B7D;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    strong {
+      color: #2b2b2b;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .page { max-width: 100%; }
+      h1 { font-size: 24px; }
+      .role-grid { grid-template-columns: 1fr; }
+      .nav-tabs { gap: 4px; }
+      .tab-btn { padding: 8px 14px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <h1>SfN Response Framework</h1>
+  <p class="subtitle">Guiding the Society for Neuroscience in timely policy advocacy and public communication. This document is intended as a complement to the full SfN Statement Decision Tree document, which should be referenced first.</p>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+    <button class="tab-btn" onclick="showTab('decision')">Decision Tree</button>
+    <button class="tab-btn" onclick="showTab('tier')">Tier Definitions</button>
+    <button class="tab-btn" onclick="showTab('templates')">Statement Templates</button>
+    <button class="tab-btn" onclick="showTab('approvals')">Approval Matrix</button>
+    <button class="tab-btn" onclick="showTab('checklist')">Go-Live Checklist</button>
+    <button class="tab-btn" onclick="showTab('escalation')">Escalation Paths</button>
+  </div>
+
+
+  <!-- OVERVIEW -->
+  <div class="tab-content active" id="tab-overview">
+    <p class="section-intro">The Rapid Response Framework provides SfN policy staff with a structured, time-bound process for issuing organizational statements in response to events, policy developments, or crises that require timely action. This framework is not a substitute for full deliberation, but rather a complement to it—ensuring the Society can speak clearly and quickly without sacrificing our scientific integrity or governance standards.</p>
+
+    <div class="card">
+      <div class="card-title">Purpose and scope</div>
+      <p style="margin-bottom: 1rem; color: #333;">A rapid response is appropriate when:</p>
+      <ul style="color: #333;">
+        <li>An external event or policy development requires organizational comment or clarification within days, not weeks</li>
+        <li>The issue is within SfN's established mission, prior positions, or scientific expertise</li>
+        <li>The scientific evidence on the topic is well-established and not substantially contested within our community</li>
+        <li>The statement can be issued without substantially revising governance, positions, or strategy</li>
+        <li>The response advances coalition-building, member engagement, or mission alignment without shifting the Society's public role</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">What this is not</div>
+      <ul style="color: #333;">
+        <li>A decision framework for whether SfN should respond (that is made elsewhere, earlier in the process)</li>
+        <li>A substitute for consultation with leadership, committees, or external partners</li>
+        <li>License to make new policy positions or expand SfN's advocacy scope</li>
+        <li>A shortcut for contentious issues or matters where SfN leadership disagrees on substance</li>
+        <li>A replacement for the full SfN advocacy process for major positions or strategy shifts</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Key success metrics</div>
+      <p style="margin-bottom: 0.75rem; color: #333;"><strong>A successful rapid response:</strong></p>
+      <ul style="color: #333;">
+        <li>Is released when the moment matters (within the event window, not after news cycle has moved on)</li>
+        <li>Advances a specific SfN objective (member guidance, coalition support, mission clarity, or legislative influence)</li>
+        <li>Reflects the scientific evidence accurately and completely</li>
+        <li>Maintains consistency with prior SfN positions and statements</li>
+        <li>Receives appropriate governance sign-off before release</li>
+        <li>Is understood and able to be defended by spokespersons and members</li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- DECISION TREE -->
+  <div class="tab-content" id="tab-decision">
+    <p class="section-intro">Use this seven-step decision tree to determine whether a rapid response is the right tool, which tier it falls into, and what approvals are needed.</p>
+
+    <div class="card">
+      <div class="card-title">Step 1: Is this within our scope?</div>
+      <div class="decision-tree">
+        <div class="decision-box">
+          <strong>Question:</strong> Is the issue directly related to neuroscience research, brain health, or science policy, and does SfN have established expertise or prior positions to ground a response?
+        </div>
+        <div class="decision-box no">
+          <strong style="color: #c41e1e;">No →</strong> Stop. Route to the Executive Director for a governance decision. Do not use rapid response process.
+        </div>
+        <div class="decision-box yes">
+          <strong style="color: #2d9e3f;">Yes →</strong> Continue to Step 2.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Step 2: Is the timing right?</div>
+      <div class="decision-tree">
+        <div class="decision-box">
+          <strong>Question:</strong> Does SfN need to comment within 3–5 days to be relevant to the news cycle, policy window, or member needs?
+        </div>
+        <div class="decision-box no">
+          <strong style="color: #c41e1e;">No →</strong> Use the standard SfN position-development process instead. Rapid response is not necessary.
+        </div>
+        <div class="decision-box yes">
+          <strong style="color: #2d9e3f;">Yes →</strong> Continue to Step 3.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Step 3: Is the evidence settled?</div>
+      <div class="decision-tree">
+        <div class="decision-box">
+          <strong>Question:</strong> Is the scientific basis for this response well-established, non-controversial within neuroscience, and defensible based on published evidence?
+        </div>
+        <div class="decision-box no">
+          <strong style="color: #c41e1e;">No →</strong> Escalate to GPA Chair and senior staff. Do not proceed with rapid response unless leadership confirms the evidence is solid enough to defend publicly.
+        </div>
+        <div class="decision-box yes">
+          <strong style="color: #2d9e3f;">Yes →</strong> Continue to Step 4.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Step 4: Can we narrow the scope?</div>
+      <div class="decision-tree">
+        <div class="decision-box">
+          <strong>Question:</strong> Can the statement be limited to core SfN positions, or would it require SfN to take a new stance on a contested topic?
+        </div>
+        <div class="decision-box no">
+          <strong style="color: #c41e1e;">No →</strong> Escalate to Executive Director. This may require Executive Committee input before proceeding.
+        </div>
+        <div class="decision-box yes">
+          <strong style="color: #2d9e3f;">Yes →</strong> Continue to Step 5.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Step 5: Will we alienate key stakeholders?</div>
+      <div class="decision-tree">
+        <div class="decision-box">
+          <strong>Question:</strong> Have coalition partners, major donors, or key member constituencies been consulted? Will the statement create internal friction or external backlash that rapid response cannot handle?
+        </div>
+        <div class="decision-box no">
+          <strong style="color: #c41e1e;">No → Pause and consult.</strong> Reach out to relevant stakeholders before drafting.
+        </div>
+        <div class="decision-box yes">
+          <strong style="color: #2d9e3f;">Yes →</strong> Continue to Step 6.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Step 6: What tier is this?</div>
+      <div class="decision-tree">
+        <div class="decision-box">
+          <strong>Question:</strong> Based on visibility, controversy, legal risk, and coalition impact, which tier applies?
+        </div>
+        <p style="margin-top: 1rem; color: #333;"><strong>Tier 1 (Rapid):</strong> Low-visibility, uncontroversial comment on a topic within established SfN positions. Internal issue clarification. Technical science communication. No legal or reputational risk. <em>Approval: Advocacy staff + GPA Chair. Timeline: 1–2 days.</em></p>
+        <p style="margin-top: 0.5rem; margin-bottom: 1rem; color: #333;"><strong>Tier 2 (Standard):</strong> Moderate visibility; some controversy; potentially multi-stakeholder impact. Reflects established SfN positions but reaches new audiences. Coalition statement. Public advocacy on known issues. Low legal or reputational risk. <em>Approval: Advocacy staff + GPA Chair + Senior Staff. Timeline: 2–3 days.</em></p>
+        <p style="margin-top: 0.5rem; color: #333;"><strong>Tier 3 (Escalated):</strong> High visibility; significant controversy; major coalition implications; potential legal, financial, or reputational risk. Statement breaks new ground or represents a shift in SfN's public positioning. Major media attention expected. <em>Approval: Advocacy staff + GPA Chair + Senior Staff + Executive Director. Timeline: 3–5 days.</em></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Step 7: What statement type?</div>
+      <div class="decision-tree">
+        <div class="decision-box">
+          <strong>Question:</strong> Which format best fits our message and audience?
+        </div>
+        <div style="margin-top: 1rem;">
+          <p style="color: #333;"><strong>Official Statement:</strong> Full, on-the-record organizational position. Signed by the President or Executive Director. Suitable for policy impact, coalition statements, public advocacy, or member communication. 250–500 words.</p>
+          <p style="margin-top: 0.75rem; color: #333;"><strong>Letter to Policymakers:</strong> Directed to specific legislators, agency officials, or other decision-makers. Urges action on a bill, regulation, or appointment. Typically 200–400 words. Can be published or held private.</p>
+          <p style="margin-top: 0.75rem; color: #333;"><strong>Op-ed or Article:</strong> Longer-form (700–1000 words). Published in news outlet or SfN's own communication channels. Explains science, context, and SfN's view in narrative form. May feature external byline (e.g., GPA Chair).</p>
+          <p style="margin-top: 0.75rem; color: #333;"><strong>FAQs or Fact Sheet:</strong> Internal or member-facing document. Answers anticipated questions about a topic. Explains SfN's position without claiming to be the Society's official voice on every detail. Suitable for complex or evolving situations.</p>
+          <p style="margin-top: 0.75rem; color: #333;"><strong>Holding Statement:</strong> Minimal comment (1–2 sentences) released immediately while full statement is being developed. Signals that SfN is aware, is taking the issue seriously, and will provide more information soon. Buys time without committing to a full response.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- TIER DEFINITIONS -->
+  <div class="tab-content" id="tab-tier">
+    <p class="section-intro">The rapid response framework uses three tiers based on visibility, controversy, scope, and risk. Tier determines timeline, approval requirements, and review depth.</p>
+
+    <div class="card">
+      <div class="card-title">Tier 1: Rapid response <span class="tag tag-red">1–2 days</span></div>
+      <p style="color: #333; margin-bottom: 0.75rem;"><strong>When to use:</strong> Low-visibility, uncontroversial statements within established SfN positions.</p>
+      <p style="color: #666; margin-bottom: 1rem;"><strong>Examples:</strong> Technical clarification about neuroscience findings in media coverage. Statement congratulating new leadership at a neuroscience funder. Support for an educational initiative that aligns with SfN mission. Minor policy comment on a topic where SfN has clear prior positions.</p>
+      <p style="color: #333; margin-bottom: 0.75rem;"><strong>Key characteristics:</strong></p>
+      <ul style="color: #333;">
+        <li>Not expected to generate significant news coverage outside trade or science media</li>
+        <li>Unlikely to be controversial within or outside SfN</li>
+        <li>Does not introduce new SfN positions, only clarifies or reiterates established ones</li>
+        <li>No anticipated legal or reputational risk</li>
+        <li>Single stakeholder focus (not multi-coalition or multi-party)</li>
+        <li>Members unlikely to question or push back on SfN's participation</li>
+      </ul>
+      <p style="color: #333; margin-top: 1rem; margin-bottom: 0.75rem;"><strong>Approval path:</strong></p>
+      <ul style="color: #333;">
+        <li>Advocacy staff drafts</li>
+        <li>GPA Chair reviews and approves (or provides feedback for revision)</li>
+        <li>Approval is documented in policy activity log</li>
+      </ul>
+      <p style="color: #333; margin-top: 1rem; margin-bottom: 0rem;"><strong>Senior Staff and Executive Director notification:</strong> Inform via email with 24 hours' notice before release. If either raises concerns, escalate to Tier 2.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tier 2: Standard response <span class="tag tag-amber">2–3 days</span></div>
+      <p style="color: #333; margin-bottom: 0.75rem;"><strong>When to use:</strong> Moderate visibility, some controversy, or multi-stakeholder impact. Reflects established SfN positions but reaches broader audiences.</p>
+      <p style="color: #666; margin-bottom: 1rem;"><strong>Examples:</strong> Public statement on a bill advancing through Congress related to neuroscience funding. Coalition statement on a policy change (with partner vetting). Member letter explaining SfN's position on a topic generating member questions. Media statement on a scientific finding or safety issue relevant to public policy. Statement of concern regarding a policy, decision, or action.</p>
+      <p style="color: #333; margin-bottom: 0.75rem;"><strong>Key characteristics:</strong></p>
+      <ul style="color: #333;">
+        <li>Expected to receive modest coverage in trade, science, or policy media</li>
+        <li>May generate some member or coalition partner questions</li>
+        <li>Reflects SfN's established positions, possibly applied to a new context or audience</li>
+        <li>Low to moderate legal or reputational risk (if any)</li>
+        <li>May involve coalition partners; alignment checked before release</li>
+        <li>Likely to strengthen SfN's visibility or impact in policy or advocacy circles</li>
+        <li>May include statements of concern that express SfN's reservations about a policy or action without necessarily calling for specific remedial action</li>
+      </ul>
+      <p style="color: #333; margin-top: 1rem; margin-bottom: 0.75rem;"><strong>Approval path:</strong></p>
+      <ul style="color: #333;">
+        <li>Advocacy staff drafts</li>
+        <li>GPA Chair reviews and approves (or requests revision)</li>
+        <li>Senior Staff reviews and approves (with focus on external communications, legal, and relationship implications)</li>
+        <li>Executive Director is notified and can flag escalation concerns</li>
+        <li>All approvals documented in policy activity log</li>
+      </ul>
+      <p style="color: #333; margin-top: 1rem; margin-bottom: 0rem;"><strong>Timeline:</strong> Advocacy staff to GPA Chair (8–12 hours), GPA Chair to Senior Staff (4–8 hours), Senior Staff to Executive Director (4–8 hours). Total: 48–72 hours if all approvals are in place.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tier 3: Escalated response <span class="tag tag-blue">3–5 days</span></div>
+      <p style="color: #333; margin-bottom: 0.75rem;"><strong>When to use:</strong> High visibility, significant controversy, major coalition impact, or potential legal or reputational risk. May introduce new SfN positioning or expand the Society's public role.</p>
+      <p style="color: #666; margin-bottom: 1rem;"><strong>Examples:</strong> Statement on a major federal policy or bill with significant neuroscience implications. Position on a controversial social or political issue where SfN's voice is requested by coalition partners. Public response to criticism of the neuroscience field or SfN itself. Major media statement expected to generate national coverage.</p>
+      <p style="color: #333; margin-bottom: 0.75rem;"><strong>Key characteristics:</strong></p>
+      <ul style="color: #333;">
+        <li>Expected to receive substantial media coverage (national, international, or major-outlet)</li>
+        <li>Likely to generate member debate, coalition partner input, or public controversy</li>
+        <li>May introduce new or revised SfN position; shifts how SfN is perceived publicly</li>
+        <li>Moderate to significant legal, financial, or reputational risk</li>
+        <li>Multi-stakeholder or multi-coalition implications; alignment is critical</li>
+        <li>Potential to impact fundraising, membership, partner relationships, or SfN's institutional position</li>
+      </ul>
+      <p style="color: #333; margin-top: 1rem; margin-bottom: 0.75rem;"><strong>Approval path:</strong></p>
+      <ul style="color: #333;">
+        <li>Advocacy staff drafts with input from GPA Chair</li>
+        <li>GPA Chair reviews and recommends approval or escalation</li>
+        <li>Senior Staff reviews with focus on legal, financial, member, and external relations implications</li>
+        <li>Executive Director reviews and approves in writing (email or recorded message required)</li>
+        <li>GPA Chair confirms readiness to defend statement externally</li>
+        <li>All approvals and decision rationale documented in policy activity log</li>
+      </ul>
+      <p style="color: #333; margin-top: 1rem; margin-bottom: 0rem;"><strong>Timeline:</strong> Advocacy staff to GPA Chair (12–24 hours), GPA Chair to Senior Staff (12–24 hours), Senior Staff to Executive Director (24–48 hours), Executive Director decision (24–48 hours). Total: 3–5 days. If timeline pressures shorten this, escalation requires Executive Director approval to proceed.</p>
+    </div>
+  </div>
+
+
+  <!-- STATEMENT TEMPLATES -->
+  <div class="tab-content" id="tab-templates">
+    <p class="section-intro">Use these templates as starting points for rapid response statements. Customize message, evidence, and call-to-action to fit the specific situation and audience.</p>
+
+    <div class="card">
+      <div class="card-title">Template 1: Standard statement <span class="tag tag-blue">Official position</span></div>
+      <div class="template-box">
+[DATE]
+
+[STATEMENT TITLE]
+
+[OPENING: State what is happening and why SfN is responding. 1–2 sentences.]
+
+[CONTEXT: Explain the issue, its relevance to neuroscience, and why SfN has expertise to comment. Reference prior SfN positions if applicable. 2–3 sentences.]
+
+[EVIDENCE: Summarize the scientific basis for SfN's view. Distinguish between what is known, unknown, and evolving. Cite key studies or findings if possible. 2–4 sentences.]
+
+[POSITION: Clearly state what SfN believes or is calling for. Use active language. 2–3 sentences.]
+
+[CALL TO ACTION: If applicable, specify what SfN is doing, what we are asking of others, or what members should know. 1–2 sentences.]
+
+[CLOSING: Reinforce the mission alignment and SfN's commitment. 1 sentence.]
+
+For more information: [contact email/spokesperson]
+      </div>
+      <button class="copy-btn" onclick="copyTemplate('template1', this)">Copy template</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Template 2: Letter to policymakers <span class="tag tag-amber">Policy advocacy</span></div>
+      <div class="template-box">
+[DATE]
+
+The Honorable [NAME]
+[ADDRESS]
+
+RE: [BILL NUMBER AND TITLE] OR [ISSUE/REGULATION]
+
+Dear [TITLE NAME]:
+
+[OPENING: State the issue and SfN's interest. 1–2 sentences.]
+
+[EVIDENCE: Explain the neuroscience evidence relevant to the policy question. Why does this matter? What does the science say? 3–4 sentences.]
+
+[POSITION: State SfN's position clearly. What do we support? What do we oppose? 2–3 sentences.]
+
+[IMPACT: Describe why this matters to neuroscientists, to the field, or to the public. 2–3 sentences.]
+
+[CALL TO ACTION: What specific action is SfN requesting (vote yes, amend, fund, study, etc.)? 1–2 sentences.]
+
+[CLOSING: Thank you and offer further assistance.]
+
+Sincerely,
+
+[SIGNATORY TITLE AND NAME]
+Society for Neuroscience
+
+CC: [Relevant stakeholders]
+      </div>
+      <button class="copy-btn" onclick="copyTemplate('template2', this)">Copy template</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Template 3: Statement of concern <span class="tag tag-amber">Policy concern</span></div>
+      <div class="template-box">
+[DATE]
+
+SfN Statement of Concern: [BRIEF DESCRIPTION OF ISSUE]
+
+The Society for Neuroscience expresses concern regarding [DESCRIBE THE POLICY, DECISION, OR ACTION]. 
+
+[CONTEXT: Explain why SfN is concerned about this matter. How does it relate to neuroscience research, the scientific community, or public understanding of brain science? 2–3 sentences.]
+
+[EVIDENCE: Present the scientific evidence or rationale supporting SfN's concern. What do we know about the implications of this policy or action? 2–4 sentences.]
+
+[POSITION: Clearly articulate SfN's position and the basis for the concern. What aspects are problematic? What would be more appropriate? 2–3 sentences.]
+
+[CALL TO ACTION: If applicable, specify what corrective action SfN believes is necessary, or what factors should be considered in reconsidering this policy or decision. If no specific action is being called for, explain what SfN will be monitoring. 1–2 sentences.]
+
+[CLOSING: Reinforce SfN's commitment to science, evidence-based policy, or the stated mission. 1 sentence.]
+
+For more information: [contact email/spokesperson]
+      </div>
+      <button class="copy-btn" onclick="copyTemplate('template3', this)">Copy template</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Template 4: Coalition statement <span class="tag tag-green">Joint position</span></div>
+      <div class="template-box">
+[DATE]
+
+[COALITION NAME] Statement on [ISSUE]
+
+[OPENING: Identify the coalition, the issue, and the collective view. 1–2 sentences.]
+
+[SIGNATORIES: List all organizations signing the statement.]
+
+[CONTEXT: Provide brief context on why this coalition is responding and why the issue matters. 2–3 sentences.]
+
+[EVIDENCE/RATIONALE: Summarize the evidence or reasoning supporting the coalition view. 2–4 sentences.]
+
+[UNIFIED POSITION: State the collective stance. What do the organizations agree on? 2–3 sentences.]
+
+[INDIVIDUAL VIEWS: Optional—brief statement from each organization on why they signed. 1–2 sentences each.]
+
+[CALL TO ACTION: What is the coalition asking for? 1–2 sentences.]
+
+[CLOSING: Reinforce unity and mission. 1 sentence.]
+
+For more information:
+[Primary contact name and email]
+[Secondary contacts from key organizations]
+      </div>
+      <button class="copy-btn" onclick="copyTemplate('template4', this)">Copy template</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Template 5: Holding statement <span class="tag tag-red">Immediate response</span></div>
+      <div class="template-box">
+The Society for Neuroscience is aware of [BRIEF EVENT DESCRIPTION]. We are actively assessing the situation and will provide a fuller response in the coming [hours/days]. In the meantime, [OPTIONAL: brief statement of principle or established position].
+
+Contact: [Comms email]
+      </div>
+      <button class="copy-btn" onclick="copyTemplate('template5', this)">Copy template</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Template 6: FAQs (for member or internal use) <span class="tag tag-gray">Guidance document</span></div>
+      <div class="template-box">
+SfN Members: [ISSUE] – Frequently Asked Questions
+
+Q: Why is SfN responding to this?
+A: [Explanation of relevance, mission alignment, member interest.]
+
+Q: What is SfN's position on [specific aspect]?
+A: [Clear statement of stance with evidence.]
+
+Q: Is this a new position for SfN?
+A: [Clarify consistency with prior positions or note that this is an evolution if applicable.]
+
+Q: What can I do if I disagree with SfN's statement?
+A: [Encourage respectful dialogue; provide feedback channel.]
+
+Q: Who can I contact with questions?
+A: [Advocacy staff or GPA Chair contact.]
+      </div>
+      <button class="copy-btn" onclick="copyTemplate('template6', this)">Copy template</button>
+    </div>
+  </div>
+
+
+  <!-- APPROVAL MATRIX -->
+  <div class="tab-content" id="tab-approvals">
+    <p class="section-intro">This matrix summarizes who must approve each tier of rapid response, by when, and what they are reviewing. Approval is documented in the policy activity log immediately after completion.</p>
+
+    <div class="card">
+      <div class="card-title">Approval requirements by tier</div>
+      <table class="approval-table">
+        <thead>
+          <tr>
+            <th style="width: 20%;">Role</th>
+            <th style="width: 25%;">Tier 1</th>
+            <th style="width: 25%;">Tier 2</th>
+            <th style="width: 30%;">Tier 3</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tier-1"><strong>Advocacy staff</strong></td>
+            <td class="tier-1">Drafts. Ensures policy activity log is updated.</td>
+            <td class="tier-2">Drafts. Coordinates review process. Ensures documentation.</td>
+            <td class="tier-3">Drafts with GPA Chair input. Coordinates all reviews. Prepares for approvals.</td>
+          </tr>
+          <tr>
+            <td class="tier-1"><strong>Executive Director</strong></td>
+            <td class="tier-1">Notified by email 24 hours before release. Can escalate to Tier 2 if concerns.</td>
+            <td class="tier-2">Notified by email. Can flag escalation concerns; does not formally approve.</td>
+            <td class="tier-3">Formally reviews and provides written approval (email or recorded). Cannot delegate.</td>
+          </tr>
+          <tr>
+            <td class="tier-1"><strong>Senior Staff</strong></td>
+            <td class="tier-1">Notified by email 24 hours before release. Can flag escalation.</td>
+            <td class="tier-2">Formally reviews. Focus: external relations, legal, reputational risk, member impact.</td>
+            <td class="tier-3">Formally reviews and recommends. Focus: legal, member relations, organizational impact, risk mitigation.</td>
+          </tr>
+          <tr>
+            <td class="tier-1"><strong>GPA Chair</strong></td>
+            <td class="tier-1">Reviews and approves. Focus: consistency with prior positions, scientific accuracy.</td>
+            <td class="tier-2">Reviews and approves. Focus: scientific accuracy, committee and coalition readiness.</td>
+            <td class="tier-3">Reviews and recommends. Focus: positioning, messaging, external readiness. May request revision or escalation.</td>
+          </tr>
+          <tr>
+            <td class="tier-1"><strong>Communications team</strong></td>
+            <td class="tier-1">Informed of release plan. Coordinates distribution channels.</td>
+            <td class="tier-2">Informed and consulted on messaging, media strategy, spokesperson prep.</td>
+            <td class="tier-3">Formally consulted. Coordinates pre-release planning, media monitoring, response strategy.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Roles and responsibilities</div>
+      <div class="role-grid">
+        <div class="role-card">
+          <div class="role-name">Advocacy staff</div>
+          <ul class="role-duties">
+            <li>Identify the trigger event and assess tier</li>
+            <li>Draft statement in consultation with GPA Chair</li>
+            <li>Coordinate review and approval process</li>
+            <li>Track timelines and escalation</li>
+            <li>Document approvals in policy activity log</li>
+            <li>Brief spokesperson</li>
+            <li>Coordinate post-release debrief</li>
+          </ul>
+        </div>
+        <div class="role-card">
+          <div class="role-name">GPA Chair</div>
+          <ul class="role-duties">
+            <li>Review statements for accuracy and consistency with prior positions</li>
+            <li>Recommend tier and process for complex or borderline cases</li>
+            <li>Advise on scientific framing and evidence standards</li>
+            <li>Approve Tier 1 statements</li>
+            <li>Coordinate with committee on coalition implications (Tier 2–3)</li>
+            <li>Be prepared to defend statement externally</li>
+          </ul>
+        </div>
+        <div class="role-card">
+          <div class="role-name">Senior Staff</div>
+          <ul class="role-duties">
+            <li>Review for external and organizational implications</li>
+            <li>Flag legal, member, or coalition partner concerns</li>
+            <li>Advise on messaging for external audiences</li>
+            <li>Coordinate with Comms team on strategy</li>
+            <li>Support Executive Director decision-making (Tier 3)</li>
+          </ul>
+        </div>
+        <div class="role-card">
+          <div class="role-name">Executive Director</div>
+          <ul class="role-duties">
+            <li>Confirm go/no-go for rapid response activation</li>
+            <li>Provide written approval for Tier 3 statements</li>
+            <li>Escalate to Executive Committee if uncertainty or controversy</li>
+            <li>Be prepared to sign or endorse statement as needed</li>
+            <li>Support post-release messaging and member communication</li>
+          </ul>
+        </div>
+        <div class="role-card">
+          <div class="role-name">Communications team</div>
+          <ul class="role-duties">
+            <li>Advise on messaging strategy and media timing</li>
+            <li>Prepare media materials and Q&amp;A</li>
+            <li>Brief designated spokesperson(s)</li>
+            <li>Manage distribution and media outreach</li>
+            <li>Monitor media and social media response</li>
+            <li>Coordinate post-release debrief insights</li>
+          </ul>
+        </div>
+        <div class="role-card">
+          <div class="role-name">CAR Chair (if animal research implicated)</div>
+          <ul class="role-duties">
+            <li>Review statements referencing animal research ethics or policy</li>
+            <li>Flag accuracy and consistency with SfN animal research positions</li>
+            <li>Advise policy staff before release</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Timeline guidelines</div>
+      <table class="approval-table">
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>Total Timeline</th>
+            <th>Policy Staff → GPA Chair</th>
+            <th>GPA Chair → Senior Staff</th>
+            <th>Senior Staff → Exec Director</th>
+            <th>Final Decision → Release</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background: #fce4e4;">
+            <td><strong>Tier 1</strong></td>
+            <td><strong>1–2 days</strong></td>
+            <td>4–8 hrs</td>
+            <td>N/A</td>
+            <td>N/A (notification only)</td>
+            <td>Up to 24 hrs notice</td>
+          </tr>
+          <tr style="background: #fef5e8;">
+            <td><strong>Tier 2</strong></td>
+            <td><strong>2–3 days</strong></td>
+            <td>8–12 hrs</td>
+            <td>12–24 hrs</td>
+            <td>12–24 hrs (notification)</td>
+            <td>24 hrs notice</td>
+          </tr>
+          <tr style="background: #e8f2fc;">
+            <td><strong>Tier 3</strong></td>
+            <td><strong>3–5 days</strong></td>
+            <td>12–24 hrs</td>
+            <td>12–24 hrs</td>
+            <td>24–48 hrs (formal approval)</td>
+            <td>12–48 hrs after approval</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- GO-LIVE CHECKLIST -->
+  <div class="tab-content" id="tab-checklist">
+    <p class="section-intro">Complete this checklist before releasing any rapid response statement. Items marked with a role must be verified by that person, not assumed. Check items off as you go — this list resets when you reload the page.</p>
+
+    <div class="card">
+      <div class="card-title">Before drafting</div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Triggering event documented in policy activity log</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Tier confirmed (1, 2, or 3) and rationale noted</div><div class="check-owner">Advocacy staff + Senior Staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Executive Director notified and activation confirmed</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Prior SfN statements and positions reviewed for consistency</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Evidence base assessed — claims are sourceable and defensible</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Coalition partner landscape assessed (who is responding, with what message)</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Statement type selected (see decision tree Step 7)</div><div class="check-owner">Advocacy staff + GPA Chair</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">During drafting</div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Statement is within scope — narrowest effective form used</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">No claims made that go beyond SfN's established positions or current evidence</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">What is known, unknown, and evolving is distinguished</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Statement does not name or single out individuals (unless explicitly authorized)</div><div class="check-owner">Advocacy staff + Senior Staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Tone is factual and professional; not reactive or inflammatory</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">CAR Chair consulted if animal research is implicated</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Q&amp;A document drafted (minimum 5 anticipated questions with answers)</div><div class="check-owner">Advocacy staff</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Before release</div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Senior Staff review complete</div><div class="check-owner">Senior Staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">GPA Chair review complete (Tier 2 and 3)</div><div class="check-owner">GPA Chair</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Executive Director approval confirmed in writing (email or recorded message)</div><div class="check-owner">Executive Director</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Legal or reputational risk review completed if flagged</div><div class="check-owner">Senior Staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">All placeholder text removed from statement</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Release timing confirmed (distribution lists, channels, embargo if any)</div><div class="check-owner">Advocacy staff + Comms</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Coalition partners notified of release timing if applicable</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Spokesperson briefed with Q&amp;A document</div><div class="check-owner">Advocacy staff</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">After release</div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Policy activity log updated with full record (trigger, decision, approvals, release)</div><div class="check-owner">Advocacy staff — within 24 hrs of release</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Media monitoring activated</div><div class="check-owner">Comms</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Member communications sent (if warranted)</div><div class="check-owner">Advocacy staff + Comms</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Post-release debrief scheduled (5–7 days out)</div><div class="check-owner">Advocacy staff</div></div></div>
+      <div class="checklist-item"><input type="checkbox"><div><div class="check-label">Any follow-up actions (additional statements, advocacy, testimony) assigned with owners</div><div class="check-owner">Advocacy staff + Senior Staff</div></div></div>
+    </div>
+  </div>
+
+
+  <!-- ESCALATION PATHS -->
+  <div class="tab-content" id="tab-escalation">
+    <p class="section-intro">Escalation paths define what happens when the rapid response process encounters a complication: missing approvers, scope creep, legal risk, or a situation that turns out to require more than a rapid response.</p>
+
+    <div class="card">
+      <div class="card-title">Escalation scenarios</div>
+      <table class="escalation-table">
+        <thead>
+          <tr><th>Situation</th><th>Action</th><th>Who decides</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Executive Director is unreachable within required timeframe</td>
+            <td>Designated Senior Staff lead may approve Tier 2 with immediate written notification to Executive Director and GPA Chair. Tier 1 same rule applies if no Tier 2 delay is feasible.</td>
+            <td>Senior Staff lead</td>
+          </tr>
+          <tr>
+            <td>GPA Chair is unavailable</td>
+            <td>Any GPA Executive Committee member may serve as reviewer. Document in activity log.</td>
+            <td>Advocacy staff + Senior Staff</td>
+          </tr>
+          <tr>
+            <td>Scope expands during drafting (issue is larger than initially assessed)</td>
+            <td>Stop drafting. Return to go/no-go decision with updated assessment. Consider shifting to Tier 3 or issuing a holding statement while standard process is initiated.</td>
+            <td>Executive Director</td>
+          </tr>
+          <tr>
+            <td>Legal risk identified (litigation, defamation concern, regulatory compliance)</td>
+            <td>Pause release. Brief Executive Director and Senior Staff immediately. Consult legal counsel before proceeding. Holding statement may be issued in the interim.</td>
+            <td>Executive Director + legal counsel</td>
+          </tr>
+          <tr>
+            <td>Internal disagreement about whether to respond or what to say</td>
+            <td>Rapid response process is paused. Issue holding statement if external response is needed. Route to Executive Committee for decision.</td>
+            <td>Executive Director</td>
+          </tr>
+          <tr>
+            <td>Coalition partner statement is not fully aligned with SfN's position</td>
+            <td>Do not sign. Notify partner of specific concerns. Consider issuing a standalone statement instead if timing permits.</td>
+            <td>Advocacy staff + GPA Chair</td>
+          </tr>
+          <tr>
+            <td>Statement is released and generates significant negative response</td>
+            <td>Convene rapid debrief within 24 hours. Do not issue a retraction without Executive Committee approval. Prepare clarifying statement if warranted.</td>
+            <td>Executive Director + GPA Chair</td>
+          </tr>
+          <tr>
+            <td>Media requests comment before statement is approved</td>
+            <td>Provide only the holding statement or a standard "we are assessing the situation" response. Do not improvise on-the-record comments. Refer to designated spokesperson.</td>
+            <td>Comms + Advocacy staff</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Post-release debrief agenda</div>
+      <p style="font-size:15px; color:#333; margin-bottom:0.75rem;">Schedule 30–45 minutes 5–7 days after release with policy staff, GPA Chair, and Senior Staff. Use this agenda:</p>
+      <ol style="font-size:15px; color:#333;">
+        <li>Did the statement accomplish its intended goal? (Mission advancement, coalition support, member guidance)</li>
+        <li>Was the process followed as designed? Where did it break down?</li>
+        <li>Were approval timelines met? If not, why?</li>
+        <li>How did the statement land externally? (Media, members, coalition partners, policymakers)</li>
+        <li>Is follow-up action needed? (Additional statement, testimony, advocacy outreach)</li>
+        <li>What should be updated in this framework based on what we learned?</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Framework review cadence</div>
+      <ul style="font-size:15px; color:#333;">
+        <li>This framework should be reviewed annually by policy staff and the GPA Chair.</li>
+        <li>Any rapid response activation should trigger a post-release debrief, the notes from which are used in the next annual review.</li>
+        <li>Backup contacts and approval authority assignments should be confirmed at the start of each program year.</li>
+        <li>Major changes to the framework require Executive Director and GPA Chair approval.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function copyTemplate(id, btn) {
+    const el = document.getElementById(id);
+    const text = el.innerText || el.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy template';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
